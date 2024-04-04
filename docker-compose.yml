@@ -1,0 +1,35 @@
+version: latest
+
+services:
+  main:
+    container_name: main
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .prod.env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - '7000:7000'
+    hostname: localhost
+    command: npm run start:prod
+    depends_on:
+      - postgres
+    restart: always
+  postgres:
+    container_name: be-better
+    image: postgres:alpine3.19
+    env_file:
+      - .prod.env
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pgdata:
