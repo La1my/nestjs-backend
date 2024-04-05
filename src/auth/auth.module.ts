@@ -16,7 +16,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
     forwardRef(() => UsersModule),
     JwtModule.register({
       secret: process.env.SECRET_KEY || 'SECRET',
-      signOptions: { expiresIn: '24h' },
     }),
   ],
   providers: [AuthService, JwtAuthGuard, AdminGuard],
