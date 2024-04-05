@@ -1,3 +1,4 @@
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -5,8 +6,12 @@ import { AppModule } from './app.module';
 
 async function start() {
   const PORT = process.env.PORT;
+  const corsOpts: CorsOptions = {
+    origin: '*',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  };
 
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, { cors: corsOpts });
 
   const config = new DocumentBuilder()
     .setTitle('BACKEND для мобильного приложения BeBetter')
