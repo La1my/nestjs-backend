@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { isAdmin } from '../auth/admin.decorator';
@@ -57,5 +65,17 @@ export class UsersController {
   @Post('task/change_status')
   changeUserTaskStatus(@Body() dto: SetTaskToUserDto): Promise<User> {
     return this.usersService.setTaskStatus(dto);
+  }
+
+  @ApiOperation({ summary: 'Изменение данных пользователя' })
+  @ApiResponse({ status: 200, type: User })
+  @isAdmin(true)
+  @UseGuards(AdminGuard)
+  @Put('/userId')
+  changeUser(
+    @Param('userId') userId: number,
+    @Body() dto: CreateUserDto,
+  ): Promise<[number, User[]]> {
+    return this.usersService.changeUserData(userId, dto);
   }
 }

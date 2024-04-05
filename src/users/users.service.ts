@@ -70,4 +70,8 @@ export class UsersService {
       include: { all: true },
     });
   }
+
+  async changeUserData(id: number, dto: CreateUserDto) {
+    return await this.userRepository.update( { ...dto }, { where: { id }, returning: true } )
+  }
 }
