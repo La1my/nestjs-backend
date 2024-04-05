@@ -8,6 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { isAdmin } from '../auth/admin.decorator';
 import { AdminGuard } from '../auth/admin.guard';
@@ -20,6 +21,9 @@ import { TasksService } from './tasks.service';
 @Controller('/tasks')
 export class TasksController {
   constructor(private readonly taskService: TasksService) {}
+
+  @ApiOperation({ summary: 'Создание задачи' })
+  @ApiResponse({ status: 201, type: Task })
   @isAdmin(true)
   @UseGuards(AdminGuard)
   @Post()
@@ -27,6 +31,8 @@ export class TasksController {
     return this.taskService.createTask(taskDto);
   }
 
+  @ApiOperation({ summary: 'Получение всех задач' })
+  @ApiResponse({ status: 200, type: [Task] })
   @isAdmin(true)
   @UseGuards(AdminGuard)
   @Get()
@@ -34,6 +40,8 @@ export class TasksController {
     return this.taskService.getAll();
   }
 
+  @ApiOperation({ summary: 'Удаление задачи' })
+  @ApiResponse({ status: 200, type: Task })
   @isAdmin(true)
   @UseGuards(AdminGuard)
   @Delete(':id')
@@ -41,11 +49,15 @@ export class TasksController {
     return this.taskService.deleteTask(id);
   }
 
+  @ApiOperation({ summary: 'Получение задачи по айди' })
+  @ApiResponse({ status: 200, type: Task })
   @Get(':id')
   getById(@Param('id') id: number): Promise<Task> {
     return this.taskService.getTaskById(id);
   }
 
+  @ApiOperation({ summary: 'Изменение задачи' })
+  @ApiResponse({ status: 200, type: [Task] })
   @isAdmin(true)
   @UseGuards(AdminGuard)
   @Put(':id')

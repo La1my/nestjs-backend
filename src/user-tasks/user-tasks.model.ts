@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   DataType,
@@ -17,6 +18,7 @@ interface UserTasksAttrs {
 
 @Table({ tableName: 'user_tasks', createdAt: false, updatedAt: false })
 export class UserTasks extends Model<UserTasks, UserTasksAttrs> {
+  @ApiProperty({ example: 10, description: 'Уникальный идентификатор' })
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -25,6 +27,10 @@ export class UserTasks extends Model<UserTasks, UserTasksAttrs> {
   })
   id: number;
 
+  @ApiProperty({
+    example: 5,
+    description: 'Уникальный идентификатор пользователя',
+  })
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
@@ -33,6 +39,7 @@ export class UserTasks extends Model<UserTasks, UserTasksAttrs> {
   })
   userId: number;
 
+  @ApiProperty({ example: 2, description: 'Уникальный идентификатор задачи' })
   @ForeignKey(() => Task)
   @Column({
     type: DataType.INTEGER,
@@ -41,6 +48,10 @@ export class UserTasks extends Model<UserTasks, UserTasksAttrs> {
   })
   taskId: number;
 
+  @ApiProperty({
+    example: true,
+    description: 'Выполнена ли задача',
+  })
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
