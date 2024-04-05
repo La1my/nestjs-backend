@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 
+import { UserAndToken } from '../interfaces/user-and-token.interface';
 import { CreateUserDto } from '../users/dto';
 import { User } from '../users/users.model';
 import { UsersService } from '../users/users.service';
@@ -18,13 +19,15 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(dto: CreateUserDto): Promise<string> {
+  async login(dto: CreateUserDto): Promise<Partial<UserAndToken>> {
     const user = await this.validateUser(dto);
 
-    return this.generateToken(user);
+    const token = this.generateToken(user);
+
+    return { userId: user.id, token };
   }
 
-  async register(dto: CreateUserDto): Promise<string | void> {
+  async register(dto: CreateUserDto): Promise<Partial<UserAndToken>> {
     const candidate = await this.userService.getUserByLogin(dto.login);
 
     if (candidate) {
@@ -40,7 +43,9 @@ export class AuthService {
       password: hashPassword,
     });
 
-    return this.generateToken(user);
+    const token = this.generateToken(user);
+
+    return { userId: user.id, token };
   }
 
   private generateToken(user: User) {
