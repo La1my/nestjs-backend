@@ -71,7 +71,7 @@ export class UsersController {
   @ApiResponse({ status: 200, type: User })
   @isAdmin(true)
   @UseGuards(AdminGuard)
-  @Put('/userId')
+  @Put(':userId')
   changeUser(
     @Param('userId') userId: number,
     @Body() dto: CreateUserDto,
