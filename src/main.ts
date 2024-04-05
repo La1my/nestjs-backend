@@ -8,7 +8,8 @@ async function start() {
   const PORT = process.env.PORT;
   const corsOpts: CorsOptions = {
     origin: '*',
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
   };
 
   const app = await NestFactory.create(AppModule, { cors: corsOpts });
