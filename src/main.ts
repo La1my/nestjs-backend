@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 async function start() {
   const PORT = process.env.PORT;
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const config = new DocumentBuilder()
     .setTitle('BACKEND для мобильного приложения BeBetter')
