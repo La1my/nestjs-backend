@@ -10,8 +10,5 @@ export class CreateUserDto {
   @IsString({ message: 'Должно быть строкой' })
   @Length(4, 16, { message: 'Не меньше 4 и не больше 16' })
   readonly password: string;
-
-  @ApiProperty({ example: '1241241', description: 'Пароль' })
-  @IsString({ message: 'Должно быть строкой' })
   readonly isAdmin: boolean;
 }
