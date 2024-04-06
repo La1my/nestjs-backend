@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { TasksService } from '../tasks/tasks.service';
 import { UserTasksService } from '../user-tasks/user-tasks.service';
 import { CreateUserDto, SetTaskToUserDto } from './dto';
+import { ChangeUserDto } from './dto/change-user.dto';
 import { User } from './users.model';
 
 @Injectable()
@@ -71,7 +72,10 @@ export class UsersService {
     });
   }
 
-  async changeUserData(id: number, dto: CreateUserDto) {
-    return await this.userRepository.update( { ...dto }, { where: { id }, returning: true } )
+  async changeUserData(id: number, dto: ChangeUserDto) {
+    return await this.userRepository.update(
+      { ...dto },
+      { where: { id }, returning: true },
+    );
   }
 }

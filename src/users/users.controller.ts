@@ -13,6 +13,7 @@ import { isAdmin } from '../auth/admin.decorator';
 import { AdminGuard } from '../auth/admin.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateUserDto, SetTaskToUserDto } from './dto';
+import { ChangeUserDto } from './dto/change-user.dto';
 import { User } from './users.model';
 import { UsersService } from './users.service';
 
@@ -74,7 +75,7 @@ export class UsersController {
   @Put(':userId')
   changeUser(
     @Param('userId') userId: number,
-    @Body() dto: CreateUserDto,
+    @Body() dto: ChangeUserDto,
   ): Promise<[number, User[]]> {
     return this.usersService.changeUserData(userId, dto);
   }
