@@ -17,17 +17,27 @@ export class UsersService {
 
   async createUser(dto: CreateUserDto): Promise<User> {
     const user = await this.userRepository.create(dto);
+    let activeTasks = [];
+    activeTasks = await this.taskService
+      .getAll()
+      .then((tasks) => tasks.filter((task) => task.isActive === true));
 
-    await user.$set('tasks', []);
+    await user.$set('tasks', activeTasks);
     user.tasks = [];
 
     return user;
   }
 
   async getAllUsers(): Promise<Array<User>> {
-    return await this.userRepository.findAll({
+    const users = await this.userRepository.findAll({
       include: { all: true },
     });
+
+    for (const user of users) {
+      user.password = undefined;
+    }
+
+    return users;
   }
 
   async getUserById(userId: number): Promise<User> {

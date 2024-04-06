@@ -31,8 +31,6 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Получение всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
-  @isAdmin(true)
-  @UseGuards(AdminGuard)
   @Get()
   getAll(): Promise<Array<User>> {
     return this.usersService.getAllUsers();
