@@ -35,4 +35,8 @@ export class TasksService {
       },
     );
   }
+
+  async getRequiredTask(): Promise<Task> {
+    return await this.taskRepository.findOne({ where: { $isRequired$: true } });
+  }
 }

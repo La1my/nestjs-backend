@@ -67,4 +67,11 @@ export class TasksController {
   ): Promise<[number, Task[]]> {
     return this.taskService.changeTask(id, taskDto);
   }
+
+  @ApiOperation({ summary: 'Получение обязательной задачи' })
+  @ApiResponse({ status: 200, type: Task })
+  @Get('/required')
+  getRequiredTask(): Promise<Task> {
+    return this.taskService.getRequiredTask();
+  }
 }
