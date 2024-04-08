@@ -44,14 +44,14 @@ export class TasksController {
   @ApiResponse({ status: 200, type: Task })
   @isAdmin(true)
   @UseGuards(AdminGuard)
-  @Delete(':id')
+  @Delete('/:id')
   delete(@Param('id') id: number): Promise<number> {
     return this.taskService.deleteTask(id);
   }
 
   @ApiOperation({ summary: 'Получение задачи по айди' })
   @ApiResponse({ status: 200, type: Task })
-  @Get(':id')
+  @Get('/:id')
   getById(@Param('id') id: number): Promise<Task> {
     return this.taskService.getTaskById(id);
   }
@@ -60,7 +60,7 @@ export class TasksController {
   @ApiResponse({ status: 200, type: [Task] })
   @isAdmin(true)
   @UseGuards(AdminGuard)
-  @Put(':id')
+  @Put('/:id')
   async update(
     @Param('id') id: number,
     @Body() taskDto: CreateTaskDto,
@@ -70,7 +70,7 @@ export class TasksController {
 
   @ApiOperation({ summary: 'Получение обязательной задачи' })
   @ApiResponse({ status: 200, type: Task })
-  @Get('/required')
+  @Get('/all/required')
   getRequiredTask(): Promise<Task> {
     return this.taskService.getRequiredTask();
   }
