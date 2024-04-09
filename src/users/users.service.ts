@@ -89,11 +89,31 @@ export class UsersService {
     );
   }
 
+  async getUsersSortByRating() {
+    const users = await this.userRepository.findAll();
+    users.sort((cur, next) => next.positiveRating - cur.positiveRating);
+    const userList = [];
+    let placement = 0;
+
+    users.forEach((user) => {
+      placement++;
+      userList.push({
+        id: user.id,
+        placement,
+        nickname: user.login,
+        doneTasks: user.positiveRating,
+      });
+    });
+
+    console.log(userList);
+
+    return userList;
+  }
+
   async getUserPosition(
     id: number,
   ): Promise<{ user: User; placement: number }> {
-    const users = await this.userRepository.findAll();
-    const sortUsers = users.sort((cur, next) => next.positiveRating - cur.positiveRating);
+    const sortUsers = await this.getUsersSortByRating();
 
     const user = await this.userRepository.findByPk(id);
     const placement = sortUsers.findIndex((user) => user.id === Number(id)) + 1;

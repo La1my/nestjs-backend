@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { addDays, compareAsc } from 'date-fns';
 
 import { CreateTaskDto } from './dto';
 import { Task } from './tasks.model';
-import { addDays, compareAsc } from 'date-fns';
 
 @Injectable()
 export class TasksService {

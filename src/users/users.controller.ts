@@ -86,4 +86,11 @@ export class UsersController {
   ): Promise<{ user: User; placement: number }> {
     return this.usersService.getUserPosition(userId);
   }
+
+  @ApiOperation({ summary: 'Получение позиции пользователя' })
+  @ApiResponse({ status: 200, type: User })
+  @Get('/position/all')
+  getAllUsersPos() {
+    return this.usersService.getUsersSortByRating();
+  }
 }
