@@ -70,7 +70,7 @@ export class TasksController {
 
   @ApiOperation({ summary: 'Получение обязательной задачи' })
   @ApiResponse({ status: 200, type: Task })
-  @Get('/all/required')
+  @Get('/required/most_required')
   getRequiredTask(): Promise<Task> {
     return this.taskService.getRequiredTask();
   }

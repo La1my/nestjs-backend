@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 
 import { CreateTaskDto } from './dto';
 import { Task } from './tasks.model';
+import { addDays, compareAsc } from 'date-fns';
 
 @Injectable()
 export class TasksService {
@@ -37,6 +38,17 @@ export class TasksService {
   }
 
   async getRequiredTask(): Promise<Task> {
-    return await this.taskRepository.findOne({ where: { $isRequired$: true } });
+    const requiredTasks = await this.taskRepository.findAll({
+      where: { $isRequired$: true },
+      include: { all: true },
+    });
+
+    requiredTasks.sort((curr, next) => {
+      const currDateExpired = addDays(curr.createdAt, curr.duration);
+      const nextDateExpired = addDays(next.createdAt, next.duration);
+      return compareAsc(currDateExpired, nextDateExpired);
+    });
+
+    return requiredTasks[0];
   }
 }

@@ -61,7 +61,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Изменение статуса задачи у пользователя' })
   @ApiResponse({ status: 201, type: User })
-  @Post('task/change_status')
+  @Post('/task/change_status')
   changeUserTaskStatus(@Body() dto: SetTaskToUserDto): Promise<User> {
     return this.usersService.setTaskStatus(dto);
   }
@@ -70,11 +70,20 @@ export class UsersController {
   @ApiResponse({ status: 200, type: User })
   @isAdmin(true)
   @UseGuards(AdminGuard)
-  @Put(':userId')
+  @Put('/:userId')
   changeUser(
     @Param('userId') userId: number,
     @Body() dto: ChangeUserDto,
   ): Promise<[number, User[]]> {
     return this.usersService.changeUserData(userId, dto);
+  }
+
+  @ApiOperation({ summary: 'Получение позиции пользователя' })
+  @ApiResponse({ status: 200, type: User })
+  @Get('/position/current/:userId')
+  getUserPos(
+    @Param('userId') userId: number,
+  ): Promise<{ user: User; placement: number }> {
+    return this.usersService.getUserPosition(userId);
   }
 }

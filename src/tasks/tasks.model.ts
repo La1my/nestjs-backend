@@ -46,10 +46,6 @@ export class Task extends Model<Task, TasksCreationAttrs> {
   @Column({ type: DataType.BOOLEAN, allowNull: true })
   isRequired: boolean;
 
-  @ApiProperty({ example: true, description: 'Удаляема ли задача' })
-  @Column({ type: DataType.BOOLEAN, allowNull: true })
-  isDeletable: boolean;
-
   @ApiProperty({ example: true, description: 'Активна ли задача' })
   @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
   isActive: boolean;
