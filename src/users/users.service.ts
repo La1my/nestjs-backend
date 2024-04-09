@@ -93,13 +93,7 @@ export class UsersService {
     id: number,
   ): Promise<{ user: User; placement: number }> {
     const users = await this.userRepository.findAll();
-    const sortUsers = users.sort((prev, cur) => {
-      if (prev.positiveRating > cur.positiveRating) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
+    const sortUsers = users.sort((cur, next) => next.positiveRating - cur.positiveRating);
 
     const user = await this.userRepository.findByPk(id);
     const placement = sortUsers.findIndex((user) => user.id === Number(id)) + 1;
