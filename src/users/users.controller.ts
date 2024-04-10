@@ -60,8 +60,8 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Изменение статуса задачи у пользователя' })
-  @ApiResponse({ status: 201, type: User })
-  @Post('/task/change_status')
+  @ApiResponse({ status: 200, type: User })
+  @Put('/task/change_status')
   changeUserTaskStatus(@Body() dto: SetTaskToUserDto): Promise<User> {
     return this.usersService.setTaskStatus(dto);
   }

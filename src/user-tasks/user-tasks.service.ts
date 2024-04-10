@@ -17,4 +17,10 @@ export class UserTasksService {
       { where: { $userId$: dto.userId, $taskId$: dto.taskId } },
     );
   }
+
+  async deleteUserTask(userId: number, taskId: number) {
+    return await this.userTasksRepository.destroy({
+      where: { $userId$: userId, $taskId$: taskId },
+    });
+  }
 }

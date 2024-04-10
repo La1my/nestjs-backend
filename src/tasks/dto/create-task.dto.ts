@@ -29,6 +29,9 @@ export class CreateTaskDto {
   @ApiProperty({ example: true, description: 'Удаляема ли задача' })
   readonly isDeletable: boolean;
 
+  @ApiProperty({ example: true, description: 'От админа ли задача' })
+  readonly isFromAdmin: boolean;
+
   @ApiProperty({ example: true, description: 'Активна ли задача' })
   readonly isActive: boolean;
 }

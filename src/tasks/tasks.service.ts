@@ -4,6 +4,7 @@ import { addDays, compareAsc } from 'date-fns';
 
 import { CreateTaskDto } from './dto';
 import { Task } from './tasks.model';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class TasksService {
@@ -39,7 +40,7 @@ export class TasksService {
 
   async getRequiredTask(): Promise<Task> {
     const requiredTasks = await this.taskRepository.findAll({
-      where: { $isRequired$: true },
+      where: { $isRequired$: true, $isActive$: true },
       include: { all: true },
     });
 
@@ -50,5 +51,24 @@ export class TasksService {
     });
 
     return requiredTasks[0];
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  async checkIsActiveTask(): Promise<void> {
+    const tasks = await this.taskRepository.findAll({
+      where: { $isActive$: true },
+    });
+
+    for (const task of tasks) {
+      const dateExpired = addDays(task.createdAt, task.duration);
+
+      if (Date.now() > dateExpired) {
+        task.isActive = false;
+        await this.taskRepository.update(task.dataValues, {
+          where: { $id$: task.id },
+          returning: true,
+        });
+      }
+    }
   }
 }

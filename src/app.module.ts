@@ -9,6 +9,7 @@ import { UserTasks } from './user-tasks/user-tasks.model';
 import { UserTasksModule } from './user-tasks/user-tasks.module';
 import { User } from './users/users.model';
 import { UsersModule } from './users/users.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UsersModule } from './users/users.module';
     TasksModule,
     UserTasksModule,
     AuthModule,
+    ScheduleModule.forRoot(),
   ],
 })
 export class AppModule {}

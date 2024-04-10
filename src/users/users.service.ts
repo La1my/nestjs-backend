@@ -6,6 +6,7 @@ import { UserTasksService } from '../user-tasks/user-tasks.service';
 import { CreateUserDto, SetTaskToUserDto } from './dto';
 import { ChangeUserDto } from './dto/change-user.dto';
 import { User } from './users.model';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class UsersService {
@@ -77,6 +78,26 @@ export class UsersService {
   async setTaskStatus(dto: SetTaskToUserDto): Promise<User> {
     await this.userTasksService.setTaskStatus(dto);
 
+    if (dto.isDone) {
+      const user = await this.userRepository.findByPk(dto.userId, {
+        include: { all: true },
+      });
+      user.positiveRating += 1;
+      await this.userRepository.update(user.dataValues, {
+        where: { $id$: user.id },
+        returning: true,
+      });
+    } else if (dto.isDone === false) {
+      const user = await this.userRepository.findByPk(dto.userId, {
+        include: { all: true },
+      });
+      user.positiveRating += 1;
+      await this.userRepository.update(user.dataValues, {
+        where: { $id$: user.id },
+        returning: true,
+      });
+    }
+
     return await this.userRepository.findByPk(dto.userId, {
       include: { all: true },
     });
@@ -122,5 +143,30 @@ export class UsersService {
       user: user.dataValues,
       placement,
     };
+  }
+
+  @Cron(CronExpression.EVERY_5_SECONDS)
+  async checkRequiredTaskIsDone(): Promise<void> {
+    const users = await this.userRepository.findAll({ include: { all: true } });
+
+    for (const user of users) {
+      for (const userTask of user.dataValues.tasks) {
+        if (
+          userTask.dataValues.isRequired &&
+          !userTask.dataValues.isActive &&
+          !userTask.dataValues['UserTasks'].dataValues.isDone
+        ) {
+          user.dataValues.positiveRating -= 1;
+        }
+
+        if (!userTask.dataValues.isActive) {
+          await this.userTasksService.deleteUserTask(user.id, userTask.id);
+        }
+      }
+      await this.userRepository.update(user.dataValues, {
+        where: { $id$: user.id },
+        returning: true,
+      });
+    }
   }
 }
