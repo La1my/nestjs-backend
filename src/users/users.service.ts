@@ -77,8 +77,9 @@ export class UsersService {
 
   async setTaskStatus(dto: SetTaskToUserDto): Promise<User> {
     await this.userTasksService.setTaskStatus(dto);
+    const task = await this.taskService.getTaskById(dto.taskId);
 
-    if (dto.isDone) {
+    if (dto.isDone && !task.isRequired) {
       const user = await this.userRepository.findByPk(dto.userId, {
         include: { all: true },
       });
@@ -87,7 +88,7 @@ export class UsersService {
         where: { $id$: user.id },
         returning: true,
       });
-    } else if (dto.isDone === false) {
+    } else if (dto.isDone === false && !task.isRequired) {
       const user = await this.userRepository.findByPk(dto.userId, {
         include: { all: true },
       });
@@ -156,7 +157,7 @@ export class UsersService {
           !userTask.dataValues.isActive &&
           !userTask.dataValues['UserTasks'].dataValues.isDone
         ) {
-          user.dataValues.positiveRating -= 1;
+          user.dataValues.negativeRating += 1;
         }
 
         if (!userTask.dataValues.isActive) {
