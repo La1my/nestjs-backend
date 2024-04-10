@@ -145,7 +145,7 @@ export class UsersService {
     };
   }
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_HOUR)
   async checkRequiredTaskIsDone(): Promise<void> {
     const users = await this.userRepository.findAll({ include: { all: true } });
 
