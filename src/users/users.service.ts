@@ -24,7 +24,7 @@ export class UsersService {
       .then((tasks) => tasks.filter((task) => task.isActive === true));
 
     await user.$set('tasks', activeTasks);
-    user.tasks = [];
+    user.tasks = activeTasks;
 
     return user;
   }
@@ -91,7 +91,7 @@ export class UsersService {
       const user = await this.userRepository.findByPk(dto.userId, {
         include: { all: true },
       });
-      user.positiveRating += 1;
+      user.positiveRating -= 1;
       await this.userRepository.update(user.dataValues, {
         where: { $id$: user.id },
         returning: true,
